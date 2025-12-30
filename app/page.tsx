@@ -1,26 +1,9 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react';
-import {
-  Sun,
-  Moon,
-  Menu,
-  X,
-  BookOpen,
-  Users,
-  GraduationCap,
-  History as HistoryIcon,
-  ChevronRight,
-  ScrollText,
-  Home,
-  Instagram,
-  Facebook,
-  Calendar,
-  MapPin,
-  Mic
-} from 'lucide-react';
-import Link from 'next/link';
+import { useRef, useState, useEffect, useMemo } from 'react';
+import { BookOpen, Calendar, MapPin, Mic, ChevronRight, X, Home, Search, Instagram, Facebook, ScrollText, Users, Moon, Sun, Menu, History as HistoryIcon, GraduationCap } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // --- Types & Interfaces ---
 
@@ -344,88 +327,131 @@ export default function MalabarKannadaSangama() {
     }
   };
 
+
+
   return (
-    <div className="min-h-screen bg-[#fffbf0] dark:bg-gray-950 text-gray-800 dark:text-gray-100 transition-colors duration-300 font-sans">
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 font-sans selection:bg-amber-100 dark:selection:bg-amber-900/30">
 
       {/* Navigation */}
       {/* Top Header (Logo & Theme) */}
-      <header className="fixed top-0 left-0 right-0 z-40 px-4 md:px-6 py-3 md:py-4 flex justify-between items-center pointer-events-none">
-        <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md px-3 py-2 md:px-4 rounded-full shadow-sm border border-amber-100 dark:border-gray-800 pointer-events-auto flex items-center gap-2">
-          <BookOpen className="text-amber-700 dark:text-amber-500 w-4 h-4 md:w-5 md:h-5" />
-          <span className="text-sm md:text-lg font-bold text-amber-700 dark:text-amber-500">ಮಲಬಾರ್ ಸಂಗಮ</span>
-        </div>
+      {/* Top Header Navigation */}
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 md:px-6 py-4 transition-all duration-300 pointer-events-none">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-2xl shadow-sm border border-gray-200/50 dark:border-zinc-800 pointer-events-auto flex justify-between items-center p-2 pl-4 pr-2">
 
-        <button
-          onClick={toggleTheme}
-          className="pointer-events-auto p-2 md:p-2.5 rounded-full bg-white/90 dark:bg-gray-900/90 backdrop-blur-md text-gray-600 dark:text-amber-400 border border-amber-100 dark:border-gray-800 shadow-sm hover:scale-105 transition-transform"
-          aria-label="Toggle Dark Mode"
-        >
-          {darkMode ? <Sun size={18} className="md:w-5 md:h-5" /> : <Moon size={18} className="md:w-5 md:h-5" />}
-        </button>
-      </header>
+            {/* Logo Area */}
+            <div className="flex items-center gap-2.5">
+              <div className="bg-amber-100 dark:bg-amber-900/40 p-1.5 rounded-full">
+                <BookOpen className="text-amber-600 dark:text-amber-500 w-4 h-4" />
+              </div>
+              <span className="text-sm font-bold tracking-tight text-gray-900 dark:text-gray-100">ಮಲಬಾರ್ ಸಂಗಮ</span>
+            </div>
 
-      {/* Floating Bottom Navigation */}
-      <nav className="fixed bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] md:w-auto max-w-lg animate-fade-in-up">
-        <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border border-gray-200 dark:border-gray-800 rounded-full shadow-2xl p-1.5 flex items-center justify-between md:justify-center md:gap-1 overflow-x-auto no-scrollbar">
-          {Object.keys(sections).map((key) => (
-            <button
-              key={key}
-              onClick={() => scrollToSection(key as keyof typeof sections)}
-              className={`flex-1 md:flex-none relative px-3 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 whitespace-nowrap text-center ${activeSection === key
-                ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 shadow-sm'
-                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800'
-                }`}
-            >
-              <span className="relative z-10">
-                {key === 'home' ? 'ಮುಖಪುಟ' : key === 'timeline' ? 'ಇತಿಹಾಸ' : key === 'programs' ? 'ಕಾರ್ಯಕ್ರಮಗಳು' : 'ಲೇಖನಗಳು'}
-              </span>
-            </button>
-          ))}
-        </div>
-      </nav>
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-1 bg-gray-100/50 dark:bg-zinc-800/50 p-1 rounded-xl">
+              {Object.keys(sections).map((key) => (
+                <button
+                  key={key}
+                  onClick={() => scrollToSection(key as keyof typeof sections)}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-all duration-300 ${activeSection === key
+                    ? 'bg-white dark:bg-zinc-700 text-amber-600 dark:text-amber-400 shadow-sm'
+                    : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-zinc-700/50'
+                    }`}
+                >
+                  {key === 'home' ? 'ಮುಖಪುಟ' : key === 'timeline' ? 'ಇತಿಹಾಸ' : key === 'programs' ? 'ಕಾರ್ಯಕ್ರಮಗಳು' : 'ಲೇಖನಗಳು'}
+                </button>
+              ))}
+            </nav>
 
-      {/* Hero Section */}
-      <section ref={sections.home} className="relative min-h-screen flex flex-col justify-center items-center bg-amber-50 dark:bg-gray-950 transition-colors duration-300 pt-28 pb-32">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10 dark:opacity-5 pointer-events-none">
-          <div className="w-full h-full" style={{ backgroundImage: 'radial-gradient(#b45309 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
-        </div>
+            {/* Actions Area */}
+            <div className="flex items-center gap-2">
+              {/* Mobile Menu Toggle */}
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="md:hidden p-2.5 rounded-xl bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors"
+                aria-label="Toggle Menu"
+              >
+                {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
+              </button>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-sm font-semibold mb-6 border border-amber-200 dark:border-amber-800/50 animate-fade-in-down">
-            ಸಮಸ್ತ ಕೇರಳ ಜಂಇಯ್ಯತುಲ್ ಉಲಮಾ – ಶತಮಾನೋತ್ಸವ ವಿಶೇಷ
+              <button
+                onClick={toggleTheme}
+                className="p-2.5 rounded-xl bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors"
+                aria-label="Toggle Dark Mode"
+              >
+                {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+            </div>
           </div>
 
-          <div className="relative w-full max-w-4xl mx-auto mb-6 p-4 animate-fade-in-up flex justify-center">
+          {/* Mobile Dropdown Navigation */}
+          {isMenuOpen && (
+            <div className="absolute top-full left-4 right-4 mt-2 p-2 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-200 dark:border-zinc-800 pointer-events-auto md:hidden flex flex-col gap-1 animate-fade-in-up origin-top">
+              {Object.keys(sections).map((key) => (
+                <button
+                  key={key}
+                  onClick={() => scrollToSection(key as keyof typeof sections)}
+                  className={`w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all ${activeSection === key
+                    ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-800'
+                    }`}
+                >
+                  {key === 'home' ? 'ಮುಖಪುಟ' : key === 'timeline' ? 'ಇತಿಹಾಸ' : key === 'programs' ? 'ಕಾರ್ಯಕ್ರಮಗಳು' : 'ಲೇಖನಗಳು'}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section ref={sections.home} className="relative min-h-screen flex flex-col justify-center items-center bg-gray-50 dark:bg-zinc-950 transition-colors duration-300 pt-32 pb-32 px-4">
+        {/* Subtle Background Pattern */}
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.02]" style={{
+          backgroundImage: 'linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)',
+          backgroundSize: '40px 40px'
+        }}></div>
+
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/50 dark:to-zinc-950/50 pointer-events-none"></div>
+
+        <div className="relative z-10 text-center max-w-4xl mx-auto">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100/50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 text-xs font-semibold mb-8 border border-amber-200/50 dark:border-amber-800/30 tracking-wide animate-fade-in-down">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+            </span>
+            ಸಮಸ್ತ ಕೇರಳ ಜಂಇಯ್ಯತುಲ್ ಉಲಮಾ – ಶತಮಾನೋತ್ಸವ ವಿಶೇಷ
+          </span>
+
+          <div className="w-full max-w-3xl mx-auto  animate-fade-in-up flex justify-center">
             <Image
               src="/typography.png"
               alt="ಮಲಬಾರ್ ಕನ್ನಡ ಸಂಗಮ"
-              width={1000}
-              height={300}
-              className="w-full h-auto max-h-[40vh] object-contain drop-shadow-md hover:drop-shadow-xl transition-all duration-500"
+              width={1500}
+              height={400}
+              className="w-full h-auto max-h-[45vh] object-contain filter dark:brightness-110 drop-shadow-xl"
               priority
             />
           </div>
 
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto font-light">
-            ಜ್ಞಾನ • ಸಂಸ್ಕೃತಿ • ಏಕತೆ
-          </p>
-          <p className="text-md text-gray-500 dark:text-gray-400 mb-10 max-w-xl mx-auto">
-            ಆಯೋಜನೆ: ಮಿಸ್ಬಾಹುಲ್ ಜಾಮಿಆ ಕನ್ನಡ ಸಂಘ, ಪಟ್ಟಿಕ್ಕಾಡ್ – ಕೇರಳ
+          <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 mb-10 max-w-xl mx-auto font-medium tracking-tight">
+            ಜ್ಞಾನ • ಸಂಸ್ಕೃತಿ • ಏಕತೆ <br />
+            <span className="text-sm font-normal opacity-80 mt-2 block">ಆಯೋಜನೆ: ಮಿಸ್ಬಾಹುಲ್ ಜಾಮಿಆ ಕನ್ನಡ ಸಂಘ, ಪಟ್ಟಿಕ್ಕಾಡ್ – ಕೇರಳ</span>
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up delay-100">
             <button
               onClick={() => scrollToSection('articles')}
-              className="px-8 py-3.5 bg-white dark:bg-gray-800 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-gray-700 rounded-xl font-semibold shadow hover:bg-amber-50 dark:hover:bg-gray-700 transition-all flex items-center justify-center gap-2"
+              className="px-8 py-3.5 bg-white dark:bg-zinc-900 text-gray-900 dark:text-white border border-gray-200 dark:border-zinc-800 rounded-2xl font-semibold shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-zinc-700 transition-all flex items-center justify-center gap-2"
             >
-              <ScrollText size={20} />
-              ಲೇಖನಗಳನ್ನು ಓದಿ
+              <ScrollText size={18} />
+              ಲೇಖನಗಳು
             </button>
             <Link
               href="/registration"
-              className="px-8 py-3.5 bg-green-700 hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-xl font-semibold shadow-lg shadow-green-700/20 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
+              className="px-8 py-3.5 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black rounded-2xl font-semibold shadow-xl shadow-black/5 dark:shadow-white/5 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
             >
-              <Users size={20} />
+              <Users size={18} />
               ನೋಂದಣಿ ಮಾಡಿ
             </Link>
           </div>
@@ -433,16 +459,21 @@ export default function MalabarKannadaSangama() {
       </section>
 
       {/* Foreword */}
-      <section className="py-16 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-amber-50 dark:bg-gray-800/50 p-8 md:p-10 rounded-3xl border-l-4 border-amber-600 dark:border-amber-500 shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
-              <Home size={24} className="text-amber-600" />
-              ಮುನ್ನುಡಿ: ನಮ್ಮ ಧ್ಯೇಯ
+      {/* Foreword */}
+      <section className="py-24 bg-white dark:bg-zinc-900 border-b border-gray-100 dark:border-zinc-800/50">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center justify-center gap-2">
+              <span className="w-8 h-1 bg-amber-500 rounded-full"></span>
+              ಮುನ್ನುಡಿ
+              <span className="w-8 h-1 bg-amber-500 rounded-full"></span>
             </h2>
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
-              ಮಲಬಾರ್ ಕನ್ನಡ ಸಂಗಮವು ಕೇವಲ ಒಂದು ಕಾರ್ಯಕ್ರಮವಲ್ಲ; ಅದು ಕೇರಳದ ನೆಲದಲ್ಲಿ ಕನ್ನಡಿಗರು ಕಟ್ಟಿಕೊಂಡ ಜ್ಞಾನ, ಸಂಸ್ಕೃತಿ ಮತ್ತು ಸಹೋದರತ್ವದ ಸಂಭ್ರಮವಾಗಿದೆ. ಸಮಸ್ತ ಕೇರಳ ಜಂಇಯ್ಯತುಲ್ ಉಲಮಾದ ಶತಮಾನೋತ್ಸವದ ಸಂದರ್ಭದಲ್ಲಿ ಈ ಲೇಖನ ಸಂಕಲನವು ಅಧ್ಯಯನ, ಅರಿವು ಮತ್ತು ಏಕತೆಯ ಸಂದೇಶವನ್ನು ಮುಂದಿನ ಪೀಳಿಗೆಗೆ ಕೊಂಡೊಯ್ಯುವ ಉದ್ದೇಶ ಹೊಂದಿದೆ.
-            </p>
+          </div>
+          <p className="text-gray-600 dark:text-gray-400 leading-8 text-lg text-center font-light">
+            "ಮಲಬಾರ್ ಕನ್ನಡ ಸಂಗಮವು ಕೇವಲ ಒಂದು ಕಾರ್ಯಕ್ರಮವಲ್ಲ; ಅದು <span className="text-gray-900 dark:text-white font-medium">ಕೇರಳದ ನೆಲದಲ್ಲಿ ಕನ್ನಡಿಗರು ಕಟ್ಟಿಕೊಂಡ ಜ್ಞಾನ, ಸಂಸ್ಕೃತಿ ಮತ್ತು ಸಹೋದರತ್ವದ ಸಂಭ್ರಮವಾಗಿದೆ</span>. ಸಮಸ್ತ ಕೇರಳ ಜಂಇಯ್ಯತುಲ್ ಉಲಮಾದ ಶತಮಾನೋತ್ಸವದ ಸಂದರ್ಭದಲ್ಲಿ ಈ ಲೇಖನ ಸಂಕಲನವು ಅಧ್ಯಯನ, ಅರಿವು ಮತ್ತು ಏಕತೆಯ ಸಂದೇಶವನ್ನು ಮುಂದಿನ ಪೀಳಿಗೆಗೆ ಕೊಂಡೊಯ್ಯುವ ಉದ್ದೇಶ ಹೊಂದಿದೆ."
+          </p>
+          <div className="mt-8 flex justify-center">
+            <Home className="text-amber-500/50 w-6 h-6" />
           </div>
         </div>
       </section>
@@ -451,78 +482,76 @@ export default function MalabarKannadaSangama() {
 
 
       {/* Timeline Section */}
-      <section ref={sections.timeline} className="py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">ಐತಿಹಾಸಿಕ ಪಯಣ</h2>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">ಕರ್ನಾಟಕ ಮತ್ತು ಮಲಬಾರ್ ನಡುವಿನ ಶತಮಾನಗಳ ಸಂಬಂಧದ ಮೈಲಿಗಲ್ಲುಗಳು.</p>
+      <section ref={sections.timeline} className="py-24 bg-gray-50 dark:bg-zinc-950 transition-colors duration-300">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">ಐತಿಹಾಸಿಕ ಪಯಣ</h2>
+            <p className="mt-4 text-gray-500 dark:text-gray-400">ಕರ್ನಾಟಕ ಮತ್ತು ಮಲಬಾರ್ ನಡುವಿನ ಶತಮಾನಗಳ ಬಾಂಧವ್ಯ</p>
           </div>
 
-          <div className="relative">
-            {/* Vertical Line */}
-            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-1 bg-gray-200 dark:bg-gray-800 transform md:-translate-x-1/2"></div>
+          <div className="relative border-l-2 border-gray-200 dark:border-zinc-800 ml-6 md:ml-12 space-y-16">
+            {TIMELINE_EVENTS.map((event, index) => (
+              <div key={event.id} className="relative pl-12 md:pl-16 group">
+                {/* Dot */}
+                <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-white dark:bg-zinc-900 border-4 border-amber-500 shadow-sm group-hover:scale-125 transition-transform duration-300"></div>
 
-            <div className="space-y-12">
-              {TIMELINE_EVENTS.map((event, index) => (
-                <div key={event.id} className={`relative flex flex-col md:flex-row items-center md:justify-between ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-
-                  {/* Marker */}
-                  <div className={`absolute left-6 md:left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full border-4 border-white dark:border-gray-900 shadow-md flex items-center justify-center z-10 ${event.colorClass}`}>
+                <div className="flex flex-col md:flex-row gap-6 items-start">
+                  <div className="shrink-0 p-3 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 text-amber-600 dark:text-amber-500 shadow-sm">
                     {event.icon}
                   </div>
-
-                  {/* Content Box */}
-                  <div className={`ml-16 md:ml-0 md:w-[45%] p-6 bg-gray-50 dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all ${index % 2 === 0 ? 'md:text-right md:mr-auto' : 'md:text-left md:ml-auto'}`}>
-                    <div className={`text-sm font-bold uppercase tracking-wide mb-1 ${event.colorClass.split(' ')[1]}`}>{event.subtitle}</div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{event.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{event.description}</p>
+                  <div>
+                    <span className="text-xs font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wider mb-2 block">{event.subtitle}</span>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">{event.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">{event.description}</p>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
 
-
       {/* Upcoming Programs Section */}
-      <section ref={sections.programs} className="py-20 bg-amber-50 dark:bg-gray-950 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">ಮುಂದಿನ ಪ್ರಮುಖ ಕಾರ್ಯಕ್ರಮಗಳು</h2>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">ಸಮಸ್ತದ ಶತಮಾನೋತ್ಸವ ಮತ್ತು ಇತರ ಪ್ರಮುಖ ಸಮಾವೇಶಗಳು</p>
+      <section ref={sections.programs} className="py-24 bg-white dark:bg-zinc-900 transition-colors duration-300">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">ಮುಂದಿನ ಕಾರ್ಯಕ್ರಮಗಳು</h2>
+              <p className="mt-4 text-gray-500 dark:text-gray-400">ಪ್ರಮುಖ ಸಮಾವೇಶಗಳು ಮತ್ತು ದಿನಾಂಕಗಳು</p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {UPCOMING_PROGRAMS.map((program) => (
-              <div key={program.id} className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow border border-gray-100 dark:border-gray-800 flex flex-col h-full">
+              <div key={program.id} className="group bg-gray-50 dark:bg-zinc-950 rounded-2xl p-6 border border-gray-100 dark:border-zinc-800 hover:border-amber-200 dark:hover:border-amber-900/50 transition-all duration-300 hover:shadow-lg dark:hover:shadow-black/50">
 
-                {/* Date Badge */}
-                <div className="inline-flex items-center gap-2 self-start bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-3 py-1 rounded-full text-xs font-semibold mb-4">
-                  <Calendar size={14} />
-                  {program.date}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="inline-flex items-center gap-1.5 bg-white dark:bg-zinc-900 text-gray-900 dark:text-white px-3 py-1 rounded-full text-xs font-medium border border-gray-200 dark:border-zinc-800 shadow-sm">
+                    <Calendar size={12} />
+                    {program.date}
+                  </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 leading-snug group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">
                   {program.title}
                 </h3>
 
-                <div className="flex items-start gap-2 text-gray-600 dark:text-gray-400 text-sm mb-6 mt-auto pt-4">
-                  <MapPin size={16} className="shrink-0 mt-0.5" />
+                <div className="flex items-start gap-2 text-gray-500 dark:text-gray-400 text-sm mb-6">
+                  <MapPin size={16} className="shrink-0 mt-0.5 text-gray-400" />
                   <span>{program.location}</span>
                 </div>
 
                 {program.sessions && (
-                  <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-                    <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">ವಿಶೇಷ ಗೋಷ್ಠಿಗಳು:</h4>
+                  <div className="mt-auto pt-6 border-t border-gray-200 dark:border-zinc-800">
+                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">ವಿಶೇಷ ಗೋಷ್ಠಿಗಳು</h4>
                     <div className="space-y-3">
                       {program.sessions.map((session, idx) => (
-                        <div key={idx} className="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg">
-                          <p className="text-sm font-medium text-amber-700 dark:text-amber-500 mb-1">{session.title}</p>
-                          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                            <Mic size={12} />
-                            <span>{session.presenter}</span>
+                        <div key={idx} className="flex gap-3">
+                          <div className="w-1 h-full min-h-[2rem] bg-amber-500/20 rounded-full"></div>
+                          <div>
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">{session.title}</p>
+                            <p className="text-xs text-gray-500 mt-0.5">{session.presenter}</p>
                           </div>
                         </div>
                       ))}
@@ -536,17 +565,18 @@ export default function MalabarKannadaSangama() {
       </section>
 
       {/* Articles Section */}
-      <section ref={sections.articles} className="py-20 bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">ಲೇಖನ ಸಂಗ್ರಹ</h2>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">ಬಯಸಿದ ವಿಷಯವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ ಓದಿ.</p>
+      {/* Articles Section */}
+      <section ref={sections.articles} className="py-24 bg-gray-50 dark:bg-zinc-950 transition-colors duration-300">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">ಲೇಖನ ಸಂಗ್ರಹ</h2>
+            <p className="mt-4 text-gray-500 dark:text-gray-400">ಬಯಸಿದ ವಿಷಯವನ್ನು ಆಯ್ಕೆ ಮಾಡಿ ಓದಿ</p>
 
             {/* Filters */}
             <div className="mt-8 flex flex-wrap justify-center gap-2">
               <button
                 onClick={() => setFilter('all')}
-                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${filter === 'all' ? 'bg-amber-700 text-white shadow-md transform scale-105' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${filter === 'all' ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/25' : 'bg-white dark:bg-zinc-900/50 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-zinc-800 hover:border-amber-500/50 dark:hover:border-amber-500/50 hover:text-amber-600 dark:hover:text-amber-500'}`}
               >
                 ಎಲ್ಲಾ
               </button>
@@ -554,7 +584,7 @@ export default function MalabarKannadaSangama() {
                 <button
                   key={cat}
                   onClick={() => setFilter(cat)}
-                  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all capitalize ${filter === cat ? 'bg-amber-700 text-white shadow-md transform scale-105' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                  className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all capitalize ${filter === cat ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/25' : 'bg-white dark:bg-zinc-900/50 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-zinc-800 hover:border-amber-500/50 dark:hover:border-amber-500/50 hover:text-amber-600 dark:hover:text-amber-500'}`}
                 >
                   {getCategoryName(cat)}
                 </button>
@@ -567,27 +597,31 @@ export default function MalabarKannadaSangama() {
             {ARTICLES.filter(a => filter === 'all' || a.category === filter).map((article) => (
               <div
                 key={article.id}
-                className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm hover:shadow-xl dark:shadow-none dark:hover:bg-gray-800 transition-all duration-300 border border-gray-100 dark:border-gray-800 overflow-hidden flex flex-col group"
+                className="group bg-white dark:bg-zinc-900 rounded-2xl shadow-sm hover:shadow-xl dark:shadow-black/50 transition-all duration-300 border border-gray-100 dark:border-zinc-800 overflow-hidden flex flex-col h-full hover:-translate-y-1"
               >
-                <div className="p-6 grow">
-                  <div className="flex justify-between items-start mb-4">
-                    <span className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded border ${getCategoryColor(article.category)} bg-opacity-10`}>
+                <div className="p-8 grow">
+                  <div className="flex justify-between items-start mb-6">
+                    <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 ${article.category === 'culture' ? 'text-amber-600' :
+                      article.category === 'education' ? 'text-green-600' :
+                        article.category === 'unity' ? 'text-blue-600' : 'text-purple-600'
+                      }`}>
                       {getCategoryName(article.category)}
                     </span>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 group-hover:text-amber-700 dark:group-hover:text-amber-500 transition-colors">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 leading-tight group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">
                     {article.title}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed line-clamp-3">
+                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed line-clamp-3">
                     {article.summary}
                   </p>
                 </div>
-                <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800">
+                <div className="px-8 py-6 border-t border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-950/30 flex justify-between items-center group-hover:bg-amber-50/30 dark:group-hover:bg-amber-900/10 transition-colors">
+                  <span className="text-xs text-gray-400 font-medium">ಓದಲು ಸುಮಾರು 3 ನಿಮಿಷ</span>
                   <button
                     onClick={() => setModalArticle(article)}
-                    className="text-amber-700 dark:text-amber-500 font-semibold text-sm hover:text-amber-900 dark:hover:text-amber-300 flex items-center gap-1 group/btn"
+                    className="text-amber-600 dark:text-amber-500 font-bold text-sm hover:underline flex items-center gap-1"
                   >
-                    ಪೂರ್ತಿ ಓದಿ <ChevronRight size={16} className="transform group-hover/btn:translate-x-1 transition-transform" />
+                    ಓದಿ <ChevronRight size={14} />
                   </button>
                 </div>
               </div>
@@ -597,35 +631,36 @@ export default function MalabarKannadaSangama() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 border-t-4 border-amber-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">ಮಿಸ್ಬಾಹುಲ್ ಜಾಮಿಆ ಕನ್ನಡ ಸಂಘ</h2>
-          <p className="text-gray-400 mb-6">ಪಟ್ಟಿಕ್ಕಾಡ್ – ಕೇರಳ</p>
+      {/* Footer */}
+      <footer className="bg-white dark:bg-zinc-950 py-16 border-t border-gray-200 dark:border-zinc-800">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <BookOpen className="text-amber-500 w-8 h-8 mx-auto mb-6" />
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight">ಮಿಸ್ಬಾಹುಲ್ ಜಾಮಿಆ ಕನ್ನಡ ಸಂಘ</h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-8 text-sm">ಪಟ್ಟಿಕ್ಕಾಡ್ – ಕೇರಳ</p>
 
-          <div className="flex justify-center gap-6 mb-8">
+          <div className="flex justify-center gap-4 mb-10">
             <a
               href="https://www.instagram.com/misbahul_jamia?igsh=YnI4eG14a2U4NHIx"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 bg-gray-800 rounded-full text-gray-400 hover:text-pink-500 hover:bg-gray-700 transition-all transform hover:scale-110"
+              className="p-3 bg-gray-50 dark:bg-zinc-900 rounded-2xl text-gray-400 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/10 transition-all group"
               aria-label="Instagram"
             >
-              <Instagram size={24} />
+              <Instagram size={20} className="group-hover:scale-110 transition-transform" />
             </a>
             <a
               href="https://www.facebook.com/share/1DE6FRWGBV/"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 bg-gray-800 rounded-full text-gray-400 hover:text-blue-500 hover:bg-gray-700 transition-all transform hover:scale-110"
+              className="p-3 bg-gray-50 dark:bg-zinc-900 rounded-2xl text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all group"
               aria-label="Facebook"
             >
-              <Facebook size={24} />
+              <Facebook size={20} className="group-hover:scale-110 transition-transform" />
             </a>
           </div>
 
-          <div className="w-16 h-1 bg-amber-600 mx-auto mb-6 rounded"></div>
-          <p className="text-sm text-gray-500">ಸಮಸ್ತ ಕೇರಳ ಜಂಇಯ್ಯತುಲ್ ಉಲಮಾ – ಶತಮಾನೋತ್ಸವ ವಿಶೇಷ</p>
-          <p className="text-xs text-gray-600 mt-8">© 2025 Malabar Kannada Sangama Interactive Experience</p>
+          <p className="text-xs text-amber-600 dark:text-amber-500/50 font-medium mb-2 uppercase tracking-widest">ಸಮಸ್ತ ಶತಮಾನೋತ್ಸವ</p>
+          <p className="text-xs text-gray-400">© 2025 Malabar Kannada Sangama</p>
         </div>
       </footer>
 
