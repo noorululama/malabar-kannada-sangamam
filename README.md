@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Malabar Kannada Sangamam (ಮಲಬಾರ್ ಕನ್ನಡ ಸಂಗಮ)
 
-## Getting Started
+A modern web platform dedicated to celebrating the rich cultural, educational, and historical bond between Karnataka and Malabar (Kerala). This project highlights the "Malabar Kannada Sangamam" event, organized by **Misbahul Jamia Kannada Sangha, Pattikkad**.
 
-First, run the development server:
+![Project Preview](/public/typography.png)
+
+## 🌟 Features
+
+- **Modern Aesthetic**: A clean, minimalist design featuring glassmorphism (`backdrop-blur`), smooth animations, and a polished UI.
+- **Dynamic Theme System**: Automatically detects system preference (Dark/Light mode) with a manual toggle for user control. Persists preference via local storage.
+- **Responsive Navigation**: 
+  - Sleek top navigation bar with glass effect.
+  - Mobile-first approach with a smooth dropdown menu.
+- **Content Sections**:
+  - **History Timeline**: Visual journey of the relationship between Malabar and Karnataka.
+  - **Articles**: A collection of cultural and educational writings.
+  - **Upcoming Programs**: Details about future events and sessions.
+- **Registration System**: 
+  - Integrated registration form for the event.
+  - Automatic deadline management (shows "Registration Closed" after the set date).
+  - Form validation and status feedback (loading, success, error modal).
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Fonts**: Inter / Geist (via `next/font`)
+- **Animations**: CSS Transitions & Keyframes
+
+## 🚀 Getting Started
+
+First, install the dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📂 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/page.tsx`: Main landing page containing all sections (Hero, Timeline, Articles, etc.).
+- `app/registration/RegistrationForm.tsx`: The registration logic and UI.
+- `app/globals.css`: Global styles and custom Tailwind utilities.
 
-## Learn More
+## 🤝 Contribution
 
-To learn more about Next.js, take a look at the following resources:
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📄 License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is open-source and available under the [MITd License](LICENSE).
