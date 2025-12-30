@@ -14,6 +14,12 @@ export async function registerUser(prevState: any, formData: FormData) {
             return { success: false, message: 'ದಯವಿಟ್ಟು 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ (Please enter a valid 10-digit mobile number).' };
         }
 
+        // Deadline Validation
+        const deadline = new Date('2026-01-10T23:59:59+05:30');
+        if (new Date() > deadline) {
+            return { success: false, message: 'ನೋಂದಣಿ ಮುಕ್ತಾಯಗೊಂಡಿದೆ (Registration has been closed).' };
+        }
+
         const doc = await getDoc();
         const sheet = doc.sheetsByIndex[0];
 

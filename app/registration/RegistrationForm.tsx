@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useActionState, useEffect, useRef, useState } from 'react';
-import { BookOpen, User, Building, MapPin, Phone, ArrowLeft, Loader2, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { BookOpen, User, Building, MapPin, Phone, ArrowLeft, Loader2, X, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { registerUser } from '@/app/actions/register';
 
@@ -15,6 +15,18 @@ export default function RegistrationForm() {
     const [showModal, setShowModal] = useState(false);
     const formRef = useRef<HTMLFormElement>(null);
 
+    const [isRegistrationClosed, setIsRegistrationClosed] = useState(false);
+
+    useEffect(() => {
+        const checkDeadline = () => {
+            const deadline = new Date('2026-01-10T23:59:59');
+            if (new Date() > deadline) {
+                setIsRegistrationClosed(true);
+            }
+        };
+        checkDeadline();
+    }, []);
+
     useEffect(() => {
         if (state.message) {
             setShowModal(true);
@@ -23,6 +35,53 @@ export default function RegistrationForm() {
             }
         }
     }, [state]);
+
+    if (isRegistrationClosed) {
+        return (
+            <div className="min-h-screen bg-[#fffbf0] dark:bg-gray-950 text-gray-800 dark:text-gray-100 font-sans transition-colors duration-300">
+                <nav className="sticky top-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm border-b border-amber-100 dark:border-gray-800">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between items-center h-16">
+                            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                                <BookOpen className="text-amber-700 dark:text-amber-500" />
+                                <span className="text-xl font-bold text-amber-700 dark:text-amber-500">ಮಲಬಾರ್ ಸಂಗಮ</span>
+                            </Link>
+                            <Link
+                                href="/"
+                                className="flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-500 hover:text-amber-800 dark:hover:text-amber-400"
+                            >
+                                <ArrowLeft size={16} />
+                                ಹಿಂದಕ್ಕೆ (Back)
+                            </Link>
+                        </div>
+                    </div>
+                </nav>
+                <div className="max-w-2xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center animate-fade-in-up">
+                    <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-amber-100 dark:border-gray-800 p-12">
+                        <div className="flex justify-center mb-6">
+                            <div className="bg-amber-100 dark:bg-amber-900/30 p-4 rounded-full">
+                                <Calendar className="w-12 h-12 text-amber-700 dark:text-amber-500" />
+                            </div>
+                        </div>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                            ನೋಂದಣಿ ಮುಕ್ತಾಯಗೊಂಡಿದೆ (Registration Closed)
+                        </h2>
+                        <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                            ಮಲಬಾರ್ ಕನ್ನಡ ಸಂಗಮ 2026 ರ ನೋಂದಣಿ ಪ್ರಕ್ರಿಯೆ ಮುಕ್ತಾಯಗೊಂಡಿದೆ. ಹೆಚ್ಚಿನ ಮಾಹಿತಿಗಾಗಿ ದಯವಿಟ್ಟು ಸಂಘಟಕರನ್ನು ಸಂಪರ್ಕಿಸಿ.
+                            <br /><br />
+                            Registration for Malabar Kannada Sangamam 2026 is now closed. Please contact the organizers for more information.
+                        </p>
+                        <Link
+                            href="/"
+                            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-amber-700 hover:bg-amber-800 transition-colors"
+                        >
+                            ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ (Back to Home)
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-[#fffbf0] dark:bg-gray-950 text-gray-800 dark:text-gray-100 font-sans transition-colors duration-300">

@@ -12,10 +12,12 @@ import {
   History as HistoryIcon,
   ChevronRight,
   ScrollText,
-  LayoutDashboard,
   Home,
   Instagram,
-  Facebook
+  Facebook,
+  Calendar,
+  MapPin,
+  Mic
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -39,6 +41,17 @@ interface TimelineEvent {
   description: string;
   colorClass: string;
   icon: React.ReactNode;
+}
+
+interface Program {
+  id: number;
+  title: string;
+  date: string;
+  location: string;
+  sessions?: {
+    title: string;
+    presenter: string;
+  }[];
 }
 
 // --- Data ---
@@ -232,50 +245,40 @@ const TIMELINE_EVENTS: TimelineEvent[] = [
   }
 ];
 
+const UPCOMING_PROGRAMS: Program[] = [
+  {
+    id: 1,
+    title: "ಜಾಮಿಯಾ ನೂರಿಯ್ಯಾ ಅರಬಿಯ್ಯಾ 63ನೇ ವಾರ್ಷಿಕ 61ನೇ ಸನದುದಾನ ಮಹಾ ಸಮ್ಮೇಳನ",
+    date: "2026 ಜನವರಿ 9, 10, 11",
+    location: "PMSA ಪೂಕೋಯ ತಂಗಳ್ ನಗರ ಪೈಝಬಾದ್"
+  },
+  {
+    id: 2,
+    title: "ಮಲಬಾರ್ ಕನ್ನಡ ಸಂಗಮ - 2026",
+    date: "11 ಜನವರಿ 2026",
+    location: "ಜಾಮಿಯಾ ನೂರಿಯ್ಯಾ ಅರಬಿಯ್ಯಾ ಪಟ್ಟಿಕ್ಕಾಡ್",
+    sessions: [
+      {
+        title: "ಸಮಸ್ತ ನೂರು ವರ್ಷಗಳು ಪೂರೈಸುವಾಗ",
+        presenter: "ಯೂಸುಪ್ ಸವಾದ್ ಮಅಬರಿ ಪರ್ಪುಂಜ"
+      },
+      {
+        title: "ಕನ್ನಡ ನಾಡು ಮತ್ತು ಸಮಸ್ತ",
+        presenter: "ಇಬ್ರಾಹಿಂ ಬಾತಿಷಾ ಶಂಸಿ"
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "ಸಮಸ್ತ ಕೇರಳ ಜಂ-ಇಯ್ಯತುಲ್ ಉಲಮಾ ಶತಾಬ್ದಿ ಸಮಾವೇಶ",
+    date: "2026 ಫೆಬ್ರವರಿ 4, 5, 6, 7, 8",
+    location: "ಕಾಸರಗೋಡು ಕುನಿಯಾ"
+  }
+];
+
 // --- Components ---
 
-const DonutChart = () => {
-  // Simple SVG Donut Chart
-  // Segments: Culture(3), Education(2), Unity(3), History(2) = Total 10
-  // Calculations: 3/10=30%, 2/10=20%, etc.
-  // Cumulative dash offsets
 
-  const radius = 15.91549430918954; // Radius for circumference of 100
-  const cx = 20;
-  const cy = 20;
-
-  return (
-    <div className="relative w-64 h-64 mx-auto animate-fade-in-up">
-      <svg viewBox="0 0 40 40" className="w-full h-full transform -rotate-90">
-        {/* Background Circle */}
-        <circle cx={cx} cy={cy} r={radius} fill="transparent" stroke="#e5e7eb" strokeWidth="6" className="dark:stroke-gray-700" />
-
-        {/* Segments */}
-        {/* Culture: 30% - Amber */}
-        <circle cx={cx} cy={cy} r={radius} fill="transparent" stroke="#d97706" strokeWidth="6"
-          strokeDasharray="30 70" strokeDashoffset="0" className="transition-all duration-1000 ease-out" />
-
-        {/* Education: 20% - Green (Start at 30) */}
-        <circle cx={cx} cy={cy} r={radius} fill="transparent" stroke="#16a34a" strokeWidth="6"
-          strokeDasharray="20 80" strokeDashoffset="-30" className="transition-all duration-1000 ease-out" />
-
-        {/* Unity: 30% - Blue (Start at 50) */}
-        <circle cx={cx} cy={cy} r={radius} fill="transparent" stroke="#2563eb" strokeWidth="6"
-          strokeDasharray="30 70" strokeDashoffset="-50" className="transition-all duration-1000 ease-out" />
-
-        {/* History: 20% - Purple (Start at 80) */}
-        <circle cx={cx} cy={cy} r={radius} fill="transparent" stroke="#9333ea" strokeWidth="6"
-          strokeDasharray="20 80" strokeDashoffset="-80" className="transition-all duration-1000 ease-out" />
-      </svg>
-
-      {/* Center Text */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-3xl font-bold text-gray-800 dark:text-white">10</span>
-        <span className="text-xs text-gray-500 dark:text-gray-400">ಲೇಖನಗಳು</span>
-      </div>
-    </div>
-  );
-};
 
 // --- Main Application Component ---
 
@@ -289,8 +292,8 @@ export default function MalabarKannadaSangama() {
   // Initialize scrolling and refs
   const sections = {
     home: useRef<HTMLElement>(null),
-    dashboard: useRef<HTMLElement>(null),
     timeline: useRef<HTMLElement>(null),
+    programs: useRef<HTMLElement>(null),
     articles: useRef<HTMLElement>(null),
   };
 
@@ -374,7 +377,7 @@ export default function MalabarKannadaSangama() {
                 }`}
             >
               <span className="relative z-10">
-                {key === 'home' ? 'ಮುಖಪುಟ' : key === 'dashboard' ? 'ವಿಶ್ಲೇಷಣೆ' : key === 'timeline' ? 'ಇತಿಹಾಸ' : 'ಲೇಖನಗಳು'}
+                {key === 'home' ? 'ಮುಖಪುಟ' : key === 'timeline' ? 'ಇತಿಹಾಸ' : key === 'programs' ? 'ಕಾರ್ಯಕ್ರಮಗಳು' : 'ಲೇಖನಗಳು'}
               </span>
             </button>
           ))}
@@ -382,7 +385,7 @@ export default function MalabarKannadaSangama() {
       </nav>
 
       {/* Hero Section */}
-      <section ref={sections.home} className="relative pt-20 pb-32 overflow-hidden bg-amber-50 dark:bg-gray-950 transition-colors duration-300">
+      <section ref={sections.home} className="relative min-h-screen flex flex-col justify-center items-center bg-amber-50 dark:bg-gray-950 transition-colors duration-300 pt-28 pb-32">
         <div className="absolute top-0 left-0 w-full h-full opacity-10 dark:opacity-5 pointer-events-none">
           <div className="w-full h-full" style={{ backgroundImage: 'radial-gradient(#b45309 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
         </div>
@@ -392,13 +395,13 @@ export default function MalabarKannadaSangama() {
             ಸಮಸ್ತ ಕೇರಳ ಜಂಇಯ್ಯತುಲ್ ಉಲಮಾ – ಶತಮಾನೋತ್ಸವ ವಿಶೇಷ
           </div>
 
-          <div className="relative w-full max-w-4xl mx-auto mb-6 p-4 animate-fade-in-up">
+          <div className="relative w-full max-w-4xl mx-auto mb-6 p-4 animate-fade-in-up flex justify-center">
             <Image
               src="/typography.png"
               alt="ಮಲಬಾರ್ ಕನ್ನಡ ಸಂಗಮ"
               width={1000}
               height={300}
-              className="w-full h-auto object-contain drop-shadow-md hover:drop-shadow-xl transition-all duration-500"
+              className="w-full h-auto max-h-[40vh] object-contain drop-shadow-md hover:drop-shadow-xl transition-all duration-500"
               priority
             />
           </div>
@@ -445,47 +448,7 @@ export default function MalabarKannadaSangama() {
       </section>
 
       {/* Dashboard Section */}
-      <section ref={sections.dashboard} className="py-20 bg-[#fffbf0] dark:bg-gray-950 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">ಸಂಗಮದ ಸಾರಾಂಶ</h2>
-            <p className="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              ಈ ಬುಕ್‌ಲೆಟ್‌ನಲ್ಲಿ ಅಡಕವಾಗಿರುವ ಪ್ರಮುಖ ವಿಷಯಗಳನ್ನು ಜ್ಞಾನ, ಸಂಸ್ಕೃತಿ ಮತ್ತು ಏಕತೆ ಎಂಬ ಮೂರು ಸ್ತಂಭಗಳಾಗಿ ವಿಂಗಡಿಸಬಹುದು.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* Chart Card */}
-            <div className="bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-xl dark:shadow-none border border-gray-100 dark:border-gray-800 flex flex-col justify-center items-center h-full">
-              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-8">ವಿಷಯಾಧಾರಿತ ವಿಶ್ಲೇಷಣೆ</h3>
-              <DonutChart />
-              <div className="grid grid-cols-2 gap-4 mt-8 w-full max-w-xs">
-                {['ಸಂಸ್ಕೃತಿ', 'ಶಿಕ್ಷಣ', 'ಏಕತೆ', 'ಇತಿಹಾಸ'].map((label, i) => (
-                  <div key={label} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <span className={`w-3 h-3 rounded-full ${['bg-amber-600', 'bg-green-600', 'bg-blue-600', 'bg-purple-600'][i]}`}></span>
-                    {label}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-6">
-              {[
-                { val: '10', label: 'ಪ್ರಮುಖ ಲೇಖನಗಳು', color: 'text-amber-600 dark:text-amber-500', border: 'border-amber-500' },
-                { val: '100+', label: 'ವರ್ಷಗಳ ಸಮಸ್ತ ಇತಿಹಾಸ', color: 'text-green-700 dark:text-green-500', border: 'border-green-600' },
-                { val: '2', label: 'ರಾಜ್ಯಗಳ (KA-KL) ಬಾಂಧವ್ಯ', color: 'text-blue-600 dark:text-blue-500', border: 'border-blue-500' },
-                { val: '∞', label: 'ಜ್ಞಾನದ ಹರಿವು', color: 'text-purple-600 dark:text-purple-500', border: 'border-purple-500' }
-              ].map((stat, idx) => (
-                <div key={idx} className={`bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow border-t-4 ${stat.border} text-center`}>
-                  <div className={`text-4xl font-bold ${stat.color} mb-2`}>{stat.val}</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Timeline Section */}
       <section ref={sections.timeline} className="py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
@@ -517,6 +480,57 @@ export default function MalabarKannadaSangama() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      {/* Upcoming Programs Section */}
+      <section ref={sections.programs} className="py-20 bg-amber-50 dark:bg-gray-950 transition-colors duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">ಮುಂದಿನ ಪ್ರಮುಖ ಕಾರ್ಯಕ್ರಮಗಳು</h2>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">ಸಮಸ್ತದ ಶತಮಾನೋತ್ಸವ ಮತ್ತು ಇತರ ಪ್ರಮುಖ ಸಮಾವೇಶಗಳು</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {UPCOMING_PROGRAMS.map((program) => (
+              <div key={program.id} className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow border border-gray-100 dark:border-gray-800 flex flex-col h-full">
+
+                {/* Date Badge */}
+                <div className="inline-flex items-center gap-2 self-start bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-3 py-1 rounded-full text-xs font-semibold mb-4">
+                  <Calendar size={14} />
+                  {program.date}
+                </div>
+
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 leading-tight">
+                  {program.title}
+                </h3>
+
+                <div className="flex items-start gap-2 text-gray-600 dark:text-gray-400 text-sm mb-6 mt-auto pt-4">
+                  <MapPin size={16} className="shrink-0 mt-0.5" />
+                  <span>{program.location}</span>
+                </div>
+
+                {program.sessions && (
+                  <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+                    <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">ವಿಶೇಷ ಗೋಷ್ಠಿಗಳು:</h4>
+                    <div className="space-y-3">
+                      {program.sessions.map((session, idx) => (
+                        <div key={idx} className="bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg">
+                          <p className="text-sm font-medium text-amber-700 dark:text-amber-500 mb-1">{session.title}</p>
+                          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                            <Mic size={12} />
+                            <span>{session.presenter}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -555,7 +569,7 @@ export default function MalabarKannadaSangama() {
                 key={article.id}
                 className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm hover:shadow-xl dark:shadow-none dark:hover:bg-gray-800 transition-all duration-300 border border-gray-100 dark:border-gray-800 overflow-hidden flex flex-col group"
               >
-                <div className="p-6 flex-grow">
+                <div className="p-6 grow">
                   <div className="flex justify-between items-start mb-4">
                     <span className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded border ${getCategoryColor(article.category)} bg-opacity-10`}>
                       {getCategoryName(article.category)}
@@ -616,43 +630,45 @@ export default function MalabarKannadaSangama() {
       </footer>
 
       {/* Article Modal */}
-      {modalArticle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-          <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onClick={() => setModalArticle(null)}></div>
-          <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col animate-fade-in-up">
+      {
+        modalArticle && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+            <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onClick={() => setModalArticle(null)}></div>
+            <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col animate-fade-in-up">
 
-            {/* Modal Header */}
-            <div className="flex justify-between items-center p-6 border-b border-gray-100 dark:border-gray-800 bg-amber-50 dark:bg-gray-800 rounded-t-2xl">
-              <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white pr-8 leading-snug">
-                {modalArticle.title}
-              </h3>
-              <button
-                onClick={() => setModalArticle(null)}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
-              >
-                <X size={24} />
-              </button>
-            </div>
+              {/* Modal Header */}
+              <div className="flex justify-between items-center p-6 border-b border-gray-100 dark:border-gray-800 bg-amber-50 dark:bg-gray-800 rounded-t-2xl">
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white pr-8 leading-snug">
+                  {modalArticle.title}
+                </h3>
+                <button
+                  onClick={() => setModalArticle(null)}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                >
+                  <X size={24} />
+                </button>
+              </div>
 
-            {/* Modal Content */}
-            <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
-              <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
-                {modalArticle.content}
+              {/* Modal Content */}
+              <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
+                <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
+                  {modalArticle.content}
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="p-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 rounded-b-2xl flex justify-end">
+                <button
+                  onClick={() => setModalArticle(null)}
+                  className="px-6 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  ಮುಚ್ಚಿ
+                </button>
               </div>
             </div>
-
-            {/* Modal Footer */}
-            <div className="p-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 rounded-b-2xl flex justify-end">
-              <button
-                onClick={() => setModalArticle(null)}
-                className="px-6 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-lg text-sm font-medium transition-colors"
-              >
-                ಮುಚ್ಚಿ
-              </button>
-            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 }
